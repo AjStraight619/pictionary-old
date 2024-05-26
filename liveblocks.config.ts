@@ -1,12 +1,32 @@
-import { createClient } from "@liveblocks/client";
+import { LiveMap, LiveObject, createClient } from "@liveblocks/client";
 import { createRoomContext, createLiveblocksContext } from "@liveblocks/react";
-import { Cursor } from "./lib/types";
+import { Cursor, GameState } from "./lib/types";
 
 const client = createClient({
-  publicApiKey:
-    "pk_prod_QMnF7E39bQMTvYkJncs_Drl77jUfdxxe9lm2OoFdxThxH2O4L-H3EisvTnxczcLt",
-  // authEndpoint: "/api/liveblocks-auth",
+  // publicApiKey:
+  // "pk_prod_QMnF7E39bQMTvYkJncs_Drl77jUfdxxe9lm2OoFdxThxH2O4L-H3EisvTnxczcLt",
+  authEndpoint: async (room) => {
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    const body = JSON.stringify({ room });
+
+    const response = await fetch("/api/liveblocks-auth", {
+      method: "POST",
+      headers,
+      body,
+    });
+
+    if (response.status === 401) {
+      window.location.href = "/sign-in";
+    }
+
+    return await response.json();
+  },
   throttle: 16,
+  backgroundKeepAliveTimeout: 15 * 60 * 1000,
+  lostConnectionTimeout: 5000,
   async resolveUsers({ userIds }) {
     // Used only for Comments and Notifications. Return a list of user information
     // retrieved from `userIds`. This info is used in comments, mentions etc.
@@ -52,9 +72,10 @@ const client = createClient({
 // Presence represents the properties that exist on every user in the Room
 // and that will automatically be kept in sync. Accessible through the
 // `user.presence` property. Must be JSON-serializable.
-type Presence = {
+export type Presence = {
   cursor: Cursor | null;
   isDrawing: boolean;
+  lastUsedColor: string | null;
 };
 
 // Optionally, Storage represents the shared document that persists in the
@@ -64,14 +85,18 @@ type Presence = {
 type Storage = {
   // author: LiveObject<{ firstName: string, lastName: string }>,
   // ...
+  gameState: LiveObject<GameState>;
+  canvasObjects: LiveMap<string, any>;
 };
 
 // Optionally, UserMeta represents static/readonly metadata on each user, as
 // provided by your own custom auth back end (if used). Useful for data that
 // will not change during a session, like a user's name or avatar.
-type UserMeta = {
-  // id?: string,  // Accessible through `user.id`
-  // info?: Json,  // Accessible through `user.info`
+export type UserMeta = {
+  id?: string;
+  info: {
+    username: string;
+  };
 };
 
 // Optionally, the type of custom events broadcast and listened to in this

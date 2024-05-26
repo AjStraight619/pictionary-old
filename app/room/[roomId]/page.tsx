@@ -1,4 +1,4 @@
-import Live from "@/components/index";
+import Live from "@/components/Live";
 import { Room } from "./room";
 
 type RoomPageProps = {

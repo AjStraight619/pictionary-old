@@ -1,22 +1,14 @@
 "use client";
 
-import {
-  useMutation,
-  useMyPresence,
-  useOther,
-  useOthersConnectionIds,
-  useOthersMapped,
-  useSelf,
-} from "@/liveblocks.config";
+import { useRef } from "react";
 import Canvas from "./canvas";
-import Lobby from "./lobby";
-import Cursor from "./cursor";
+import Lobby from "./lobby/index";
 import Test from "./test";
-import { Button } from "./ui/button";
+import Toolbar from "./toolbar";
 
 export default function Live() {
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col gap-4 overflow-hidden p-4">
       <div className="flex flex-row flex-1">
         <div className="w-1/2 h-full">
           <Lobby />

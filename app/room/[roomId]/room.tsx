@@ -3,6 +3,7 @@
 import { ReactNode } from "react";
 import { RoomProvider } from "@/liveblocks.config";
 import { ClientSideSuspense } from "@liveblocks/react";
+import { LiveMap, LiveObject } from "@liveblocks/client";
 
 type RoomProps = {
   roomId: string;
@@ -16,6 +17,14 @@ export function Room({ roomId, children }: RoomProps) {
       initialPresence={{
         cursor: null,
         isDrawing: false,
+        lastUsedColor: null,
+      }}
+      initialStorage={{
+        gameState: new LiveObject({
+          isGameStarted: false,
+          isGameOver: false,
+        }),
+        canvasObjects: new LiveMap(),
       }}
     >
       <ClientSideSuspense fallback={<div>Loading…</div>}>
