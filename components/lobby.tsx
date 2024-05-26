@@ -1,4 +1,5 @@
 import { useOthers, useSelf } from "@/liveblocks.config";
+import { PencilIcon } from "lucide-react";
 import { useMemo } from "react";
 
 export default function Lobby() {
@@ -10,9 +11,12 @@ export default function Lobby() {
   }, [others, self]);
 
   return (
-    <div>
+    <div className="">
       {everyone.map((user) => (
-        <div key={user.connectionId}>{user.connectionId}</div>
+        <div className="text-black ml-2" key={user.connectionId}>
+          {user.connectionId}
+          <span>{self.presence.isDrawing && <PencilIcon size={15} />}</span>
+        </div>
       ))}
     </div>
   );

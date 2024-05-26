@@ -1,11 +1,12 @@
 import { createClient } from "@liveblocks/client";
 import { createRoomContext, createLiveblocksContext } from "@liveblocks/react";
+import { Cursor } from "./lib/types";
 
 const client = createClient({
   publicApiKey:
     "pk_prod_QMnF7E39bQMTvYkJncs_Drl77jUfdxxe9lm2OoFdxThxH2O4L-H3EisvTnxczcLt",
   // authEndpoint: "/api/liveblocks-auth",
-  // throttle: 100,
+  throttle: 16,
   async resolveUsers({ userIds }) {
     // Used only for Comments and Notifications. Return a list of user information
     // retrieved from `userIds`. This info is used in comments, mentions etc.
@@ -52,7 +53,7 @@ const client = createClient({
 // and that will automatically be kept in sync. Accessible through the
 // `user.presence` property. Must be JSON-serializable.
 type Presence = {
-  cursor: { x: number; y: number } | null;
+  cursor: Cursor | null;
   isDrawing: boolean;
 };
 
