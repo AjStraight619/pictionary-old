@@ -132,13 +132,21 @@ export const handleKeyDown = ({ e, canvas }: CanvasKeyDown) => {
 };
 
 export const handleResize = ({ canvas }: { canvas: fabric.Canvas | null }) => {
-  const canvasElement = document.getElementById("canvas");
-  if (!canvasElement) return;
+  const canvasElement = canvas?.getElement(); // Get the actual canvas element
+  const canvasContainer = canvasElement?.parentElement; // Get its parent element (canvas-container)
+  if (!canvasElement || !canvasContainer || !canvas) {
+    console.error("Canvas or container element not found");
+    return;
+  }
 
-  if (!canvas) return;
+  const width = canvasContainer.clientWidth;
+  const height = canvasContainer.clientHeight;
 
   canvas.setDimensions({
-    width: canvasElement.clientWidth,
-    height: canvasElement.clientHeight,
+    width,
+    height,
   });
+
+  console.log("Resizing canvas element width: ", width);
+  console.log("Resizing canvas element height: ", height);
 };

@@ -28,10 +28,10 @@ export default function Canvas() {
 
   const isEditingRef = useRef(false);
 
-  // const othersMapped = useOthersMapped((other) => ({
-  //   cursor: other.presence.cursor,
-  //   isDrawing: other.presence.isDrawing,
-  // }));
+  const othersMapped = useOthersMapped((other) => ({
+    cursor: other.presence.cursor,
+    isDrawing: other.presence.isDrawing,
+  }));
 
   const handleSelectElement = useCallback((element: Element) => {
     setActiveElement(element);
@@ -162,17 +162,17 @@ export default function Canvas() {
     <div
       onPointerLeave={handlePointerLeave}
       onPointerMove={handlePointerMove}
-      className="h-full bg-gray-50 rounded-md w-full"
+      className="flex h-full w-full flex-1 items-center justify-center bg-gray-50"
       id="canvas"
     >
       <canvas ref={canvasRef} />
-      {/* {othersMapped.map(([connectionId, { cursor, isDrawing }]) => (
+      {othersMapped.map(([connectionId, { cursor, isDrawing }]) => (
         <>
           {cursor !== null && (
             <Cursor key={connectionId} x={cursor.x} y={cursor.y} />
           )}
         </>
-      ))} */}
+      ))}
       <Toolbar
         activeElement={activeElement}
         handleSelectElement={handleSelectElement}

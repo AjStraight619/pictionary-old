@@ -1,10 +1,9 @@
 "use client";
 
-import { useRef } from "react";
 import Canvas from "./canvas";
 import Lobby from "./lobby/index";
 import Test from "./test";
-import Toolbar from "./toolbar";
+import Chat from "./chat/index";
 
 export default function Live() {
   return (
@@ -17,8 +16,12 @@ export default function Live() {
           <Test />
         </div>
       </div>
-      <div className="h-3/4">
+      <div className="h-3/4 flex gap-x-2 overflow-hidden w-full items-center justify-center">
         <Canvas />
+
+        <div className="w-[20rem] h-full flex-shrink-0">
+          <Chat />
+        </div>
       </div>
     </div>
   );
