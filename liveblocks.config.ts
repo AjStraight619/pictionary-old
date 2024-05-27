@@ -1,6 +1,11 @@
-import { LiveMap, LiveObject, createClient } from "@liveblocks/client";
+import {
+  LiveList,
+  LiveMap,
+  LiveObject,
+  createClient,
+} from "@liveblocks/client";
 import { createRoomContext, createLiveblocksContext } from "@liveblocks/react";
-import { Cursor, GameState } from "./lib/types";
+import { Cursor, GameState, Message, RoundState } from "./lib/types";
 
 const client = createClient({
   // publicApiKey:
@@ -84,10 +89,10 @@ export type Presence = {
 // LiveList, LiveMap, LiveObject instances, for which updates are
 // automatically persisted and synced to all connected clients.
 type Storage = {
-  // author: LiveObject<{ firstName: string, lastName: string }>,
-  // ...
   gameState: LiveObject<GameState>;
   canvasObjects: LiveMap<string, any>;
+  messages: LiveList<LiveObject<Message>>;
+  roundState: LiveObject<RoundState>;
 };
 
 // Optionally, UserMeta represents static/readonly metadata on each user, as

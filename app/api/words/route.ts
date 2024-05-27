@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   let mode = req.nextUrl.searchParams.get("mode") as WordDifficulty;
-
+  console.log("api hit: ", mode);
   const validModes: WordDifficulty[] = ["easy", "medium", "hard"];
 
   if (!validModes.includes(mode)) {

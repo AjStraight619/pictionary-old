@@ -8,8 +8,14 @@ export type Cursor = {
 export type GameState = {
   isGameStarted: boolean;
   isGameOver: boolean;
+  currentWord: string;
 };
 
+export type RoundState = {
+  isRoundStarted: boolean;
+  isRoundOver: boolean;
+  personDrawing: string;
+};
 export type WordDifficulty = "easy" | "medium" | "hard";
 
 export type ActiveElement = {
@@ -69,4 +75,12 @@ export type CanvasKeyDown = {
 export type CanvasResize = {
   e: UIEvent;
   canvas: fabric.Canvas;
+};
+
+export type Message = {
+  id: string;
+  content: string;
+  username: string;
+  isCorrect: boolean;
+  isClose: boolean;
 };

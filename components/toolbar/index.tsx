@@ -20,7 +20,7 @@ export default function Toolbar({
   handleSelectElement,
 }: ToolbarProps) {
   return (
-    <div className="fixed bottom-4 -translate-x-1/2 left-1/2 p-4 bg-white shadow-xl rounded-lg">
+    <div className="fixed bottom-4 transform -translate-x-[calc(1/2 - 20rem)] left-[calc(1/2 - 20rem)] p-4 bg-white shadow-xl rounded-lg">
       <div className="flex items-center gap-x-2">
         <ToolbarButton
           isActive={activeElement === "selector"}
