@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,6 +16,7 @@ import { createRoom } from "@/actions/room";
 import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
 import { useRouter } from "next/navigation";
+import SubmitButton from "../ui/submit-button";
 
 export default function CreateRoom() {
   const [error, setError] = useState("");
@@ -23,8 +25,8 @@ export default function CreateRoom() {
   const form = useForm<z.infer<typeof CreateRoomSchema>>({
     resolver: zodResolver(CreateRoomSchema),
     defaultValues: {
-      name: "My room",
-      isOpen: false,
+      name: "",
+      isOpen: true,
       maxPlayers: 5,
     },
   });
@@ -37,7 +39,9 @@ export default function CreateRoom() {
           setError("Something went wrong, try again");
           return;
         }
-        if (data.success) {
+        if (data.success && data.room) {
+          push(`/room/${data.room.id}`);
+          return;
         }
       });
     });
@@ -63,16 +67,21 @@ export default function CreateRoom() {
           control={form.control}
           name="isOpen"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Open</FormLabel>
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
               <FormControl>
                 <Checkbox
-                  checked={field.value}
-                  onChange={field.onChange}
+                  checked={field.value || false}
+                  onCheckedChange={(checked) => field.onChange(checked)}
                   onBlur={field.onBlur}
                   ref={field.ref}
                 />
               </FormControl>
+              <div className="flex flex-col space-y-1 items-start justify-center">
+                <FormLabel>Open </FormLabel>
+                <FormDescription>
+                  Choose whether this room is public
+                </FormDescription>
+              </div>
               <FormMessage />
             </FormItem>
           )}
@@ -84,12 +93,13 @@ export default function CreateRoom() {
             <FormItem>
               <FormLabel>Max Players</FormLabel>
               <FormControl>
-                <Input {...field} type="number" />
+                <Input max={8} min={2} {...field} type="number" />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        <SubmitButton isPending={isPending}>Create Room</SubmitButton>
       </form>
     </Form>
   );

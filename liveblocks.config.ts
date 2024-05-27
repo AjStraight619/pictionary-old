@@ -24,6 +24,7 @@ const client = createClient({
 
     return await response.json();
   },
+
   throttle: 16,
   backgroundKeepAliveTimeout: 15 * 60 * 1000,
   lostConnectionTimeout: 5000,

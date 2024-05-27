@@ -13,6 +13,8 @@ import {
 } from "@/lib/canvas";
 import Toolbar from "../toolbar";
 import { Element } from "@/lib/types";
+import LiveCurosr from "./live-cursor";
+import LiveCursor from "./live-cursor";
 
 export default function Canvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -52,6 +54,7 @@ export default function Canvas() {
         fabricRef.current.defaultCursor = "crosshair";
         fabricRef.current.hoverCursor = "crosshair";
         selectedElementRef.current = "pencil";
+        isDrawing.current = true;
         break;
       case "rectangle":
         selectedElementRef.current = "rectangle";
@@ -162,17 +165,11 @@ export default function Canvas() {
     <div
       onPointerLeave={handlePointerLeave}
       onPointerMove={handlePointerMove}
-      className="flex h-full w-full flex-1 items-center justify-center bg-gray-50"
+      className="flex h-full w-full flex-1 items-center justify-center bg-gray-50 rounded-md"
       id="canvas"
     >
       <canvas ref={canvasRef} />
-      {othersMapped.map(([connectionId, { cursor, isDrawing }]) => (
-        <>
-          {cursor !== null && (
-            <Cursor key={connectionId} x={cursor.x} y={cursor.y} />
-          )}
-        </>
-      ))}
+      <LiveCursor />
       <Toolbar
         activeElement={activeElement}
         handleSelectElement={handleSelectElement}

@@ -20,8 +20,6 @@ export async function POST(request: Request) {
       );
     }
 
-    const userRooms = await getPlayerRooms();
-
     const userInfo = {
       id: curUser.id,
       info: {

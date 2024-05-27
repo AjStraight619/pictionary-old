@@ -7,6 +7,7 @@ import { z } from "zod";
 export async function createRoom(values: z.infer<typeof CreateRoomSchema>) {
   const user = await currentUser();
   const validatedValues = CreateRoomSchema.safeParse(values);
+
   if (!user || !user.id) {
     return {
       error: "User could not be identified",
@@ -26,11 +27,30 @@ export async function createRoom(values: z.infer<typeof CreateRoomSchema>) {
   } = validatedValues;
 
   try {
-  } catch (err) {}
+    const newRoom = await db.room.create({
+      data: {
+        name,
+        numPlayers: maxPlayers,
+        isOpen,
+      },
+    });
 
-  // const newRoom = await db.room.create({
-  //     data: {
+    await db.roomPlayer.create({
+      data: {
+        playerId: user.id,
+        roomId: newRoom.id,
+        isLeader: true,
+      },
+    });
 
-  //     }
-  // })
+    return {
+      success: true,
+      room: newRoom,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: getErrorMessage(err),
+    };
+  }
 }

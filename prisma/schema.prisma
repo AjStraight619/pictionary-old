@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,26 +8,38 @@ datasource db {
 }
 
 model Player {
-  id                String       @id @unique
+  id                String          @id @unique
   name              String
-  username          String?      @unique
+  username          String?         @unique
   avatar            String?
   isProfileComplete Boolean
   leaderboard       LeaderBoard?
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
-  room              Room[]
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  rooms             RoomPlayer[]
 }
 
 model Room {
-  id         String   @id @default(cuid())
+  id         String       @id @default(cuid())
   name       String
-  isOpen     OpenRoom
+  isOpen     Boolean
   numPlayers Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  playerId   String
-  player     Player   @relation(fields: [playerId], references: [id])
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  players    RoomPlayer[]
+}
+
+model RoomPlayer {
+  id        String   @id @default(cuid())
+  playerId  String
+  roomId    String
+  isLeader  Boolean
+  createdAt DateTime @default(now())
+
+  player    Player   @relation(fields: [playerId], references: [id])
+  room      Room     @relation(fields: [roomId], references: [id])
+
+  @@unique([playerId, roomId])
 }
 
 model LeaderBoard {
@@ -43,11 +49,6 @@ model LeaderBoard {
   totalRoundsPlayed    Int
   averageScorePerRound Int
   createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  updatedAt            DateTime @default(now())
   player               Player   @relation(fields: [playerId], references: [id])
-}
-
-enum OpenRoom {
-  yes
-  no
 }
