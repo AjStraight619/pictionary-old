@@ -1,6 +1,6 @@
 import { Liveblocks } from "@liveblocks/node";
 import { currentUser } from "@clerk/nextjs/server";
-import { getPlayerRooms } from "@/actions/getData";
+// import { getPlayerRooms } from "@/actions/getData";
 
 const liveblocks = new Liveblocks({
   secret: process.env.LIVEBLOCKS_SECRET_KEY!,
