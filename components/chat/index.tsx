@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -12,7 +12,6 @@ import { motion } from "framer-motion";
 import { useMutation, useStorage } from "@/liveblocks.config";
 import { ScrollArea } from "../ui/scroll-area";
 import { LiveObject } from "@liveblocks/client";
-import { Button } from "../ui/button";
 
 const TESTWORD = "TEST WORD";
 

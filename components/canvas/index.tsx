@@ -13,13 +13,14 @@ import {
 } from "@/lib/canvas";
 import Toolbar from "../toolbar";
 import { Element } from "@/lib/types";
-import LiveCurosr from "./live-cursor";
 import LiveCursor from "./live-cursor";
 
 export default function Canvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricRef = useRef<fabric.Canvas | null>(null);
   const isDrawing = useRef(false);
+
+  const lastUsedColorRef = useRef("#000000");
 
   const shapeRef = useRef<fabric.Object | null>(null);
 
@@ -104,6 +105,7 @@ export default function Canvas() {
         isDrawing,
         selectedElementRef,
         shapeRef,
+        lastUsedColorRef,
       });
     });
 
@@ -165,7 +167,7 @@ export default function Canvas() {
     <div
       onPointerLeave={handlePointerLeave}
       onPointerMove={handlePointerMove}
-      className="flex h-full w-full flex-1 items-center justify-center bg-gray-50 rounded-md"
+      className="flex h-full w-full  items-center justify-center  bg-gray-50 rounded-md"
       id="canvas"
     >
       <canvas ref={canvasRef} />

@@ -49,3 +49,18 @@ export async function createPlayer(values: z.infer<typeof CreatePlayerSchema>) {
     };
   }
 }
+
+export async function isPlayer() {
+  const currUser = await currentUser();
+  if (!currUser || !currUser.id) {
+    throw new Error(
+      "Yo this person is not logged in and trying to create a room"
+    );
+  }
+  const player = await db.player.findFirst({
+    where: {
+      id: currUser.id,
+    },
+  });
+  return !!player;
+}

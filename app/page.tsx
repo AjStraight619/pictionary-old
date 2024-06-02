@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import JoinRoomDialog from "@/components/landing-page/join-room-dialog";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <Nav />

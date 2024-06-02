@@ -35,7 +35,7 @@ model RoomPlayer {
   roomId    String
   isLeader  Boolean
   createdAt DateTime @default(now())
-
+  updatedAt  DateTime     @updatedAt
   player    Player   @relation(fields: [playerId], references: [id])
   room      Room     @relation(fields: [roomId], references: [id])
 

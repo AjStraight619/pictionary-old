@@ -35,11 +35,13 @@ export default function CreateRoom() {
     setError("");
     startTransition(() => {
       createRoom(values).then((data) => {
+        console.log("Data: ", data);
         if (!data) {
           setError("Something went wrong, try again");
           return;
         }
         if (data.success && data.room) {
+          console.log("Room: ", data.room);
           push(`/room/${data.room.id}`);
           return;
         }

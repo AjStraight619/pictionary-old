@@ -11,6 +11,7 @@ import {
 } from "./types";
 
 import { nanoid } from "nanoid";
+import { createSpecificShape } from "./shape";
 
 export const InitializeCanvas = ({
   canvasRef,
@@ -35,6 +36,7 @@ export const handleCanvasMouseDown = ({
   isDrawing,
   selectedElementRef,
   shapeRef,
+  lastUsedColorRef,
 }: CanvasMouseDown) => {
   const pointer = canvas.getPointer(options.e);
 
@@ -55,6 +57,28 @@ export const handleCanvasMouseDown = ({
     canvas.freeDrawingBrush.width = 5;
     canvas.freeDrawingBrush.color = "#000000";
     return;
+  }
+
+  if (
+    target &&
+    (target.type === selectedElementRef.current ||
+      target.type === "activeSelection")
+  ) {
+    isDrawing.current = false;
+    canvas.setActiveObject(target);
+
+    target.setCoords();
+  } else {
+    isDrawing.current = true;
+
+    shapeRef.current = createSpecificShape(
+      lastUsedColorRef.current,
+      selectedElementRef.current,
+      pointer as any
+    );
+  }
+  if (shapeRef.current) {
+    canvas.add(shapeRef.current);
   }
 };
 
@@ -110,12 +134,18 @@ export const handleCanvasMouseMove = ({
 }: CanvasMouseMove) => {
   if (!isDrawing.current) return;
   if (selectedElementRef.current === "pencil") return;
+
+  canvas.isDrawingMode = false;
+  const pointer = canvas.getPointer(options.e);
+
+  switch (selectedElementRef?.current) {
+    case "rectangle":
+  }
 };
 
 export const handleKeyDown = ({ e, canvas }: CanvasKeyDown) => {
   if (!canvas) return;
   const activeObjects = canvas.getActiveObjects();
-  console.log("active objects: ", activeObjects);
   switch (e.key) {
     case "Backspace":
       {
@@ -132,15 +162,15 @@ export const handleKeyDown = ({ e, canvas }: CanvasKeyDown) => {
 };
 
 export const handleResize = ({ canvas }: { canvas: fabric.Canvas | null }) => {
-  const canvasElement = canvas?.getElement(); // Get the actual canvas element
-  const canvasContainer = canvasElement?.parentElement; // Get its parent element (canvas-container)
-  if (!canvasElement || !canvasContainer || !canvas) {
-    console.error("Canvas or container element not found");
+  const canvasElement = document.getElementById("canvas");
+
+  if (!canvasElement || !canvas) {
+    console.error("Canvas element not found");
     return;
   }
 
-  const width = canvasContainer.clientWidth;
-  const height = canvasContainer.clientHeight;
+  const width = canvasElement.clientWidth;
+  const height = canvasElement.clientHeight;
 
   canvas.setDimensions({
     width,

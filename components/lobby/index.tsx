@@ -1,8 +1,8 @@
-import { useOthersMapped, useSelf } from "@/liveblocks.config";
-import React, { useEffect, useRef } from "react";
+import { useSelf } from "@/liveblocks.config";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { COLORS } from "@/lib/constants";
 import { assignColor } from "@/lib/utils";
+import Timer from "../timer/timer";
 
 type User = {
   username: string;
@@ -11,8 +11,6 @@ type User = {
 type ConnectionUser = [number, User];
 
 export default function Lobby() {
-  const renderRef = useRef(0);
-
   const me = useSelf((me) => me.info);
 
   // const others = useOthersMapped((other) => other.info);
@@ -32,7 +30,8 @@ export default function Lobby() {
   ];
 
   return (
-    <Card className="h-full">
+    <Card className="h-full relative">
+      {/* <Timer /> */}
       <CardHeader>
         <CardTitle>Players</CardTitle>
       </CardHeader>

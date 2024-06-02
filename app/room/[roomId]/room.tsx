@@ -5,6 +5,7 @@ import { RoomProvider } from "@/liveblocks.config";
 import { ClientSideSuspense } from "@liveblocks/react";
 import { LiveList, LiveMap, LiveObject } from "@liveblocks/client";
 import { Message } from "@/lib/types";
+import RoomLoading from "./room-loading";
 
 type RoomProps = {
   roomId: string;
@@ -31,7 +32,7 @@ export function Room({ roomId, children }: RoomProps) {
         roundState: new LiveObject(),
       }}
     >
-      <ClientSideSuspense fallback={<div>Loading…</div>}>
+      <ClientSideSuspense fallback={<RoomLoading />}>
         {() => children}
       </ClientSideSuspense>
     </RoomProvider>

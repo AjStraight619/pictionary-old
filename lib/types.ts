@@ -37,7 +37,7 @@ export type CanvasMouseDown = {
   selectedElementRef: React.MutableRefObject<Element | null>;
   isDrawing: React.MutableRefObject<boolean>;
   shapeRef: React.MutableRefObject<fabric.Object | null>;
-  // lastUsedColorRef: React.MutableRefObject<string>;
+  lastUsedColorRef: React.MutableRefObject<string>;
   // strokeWidthRef: React.MutableRefObject<number>;
 };
 
@@ -75,6 +75,19 @@ export type CanvasKeyDown = {
 export type CanvasResize = {
   e: UIEvent;
   canvas: fabric.Canvas;
+};
+
+export type ModifyShape = {
+  canvas: fabric.Canvas;
+  property: string;
+  value: any;
+  activeObjectRef: React.MutableRefObject<fabric.Object | null>;
+  syncShapeInStorage: (shape: fabric.Object) => void;
+};
+
+export type UpdateShapeColor = {
+  canvas: fabric.Canvas | null;
+  lastUsedColor: string;
 };
 
 export type Message = {
