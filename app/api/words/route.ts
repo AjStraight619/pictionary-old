@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   let mode = req.nextUrl.searchParams.get("mode") as WordDifficulty;
-  console.log("api hit: ", mode);
+  console.log("API hit: ", mode);
   const validModes: WordDifficulty[] = ["easy", "medium", "hard"];
 
   if (!validModes.includes(mode)) {
@@ -12,8 +12,18 @@ export async function GET(req: NextRequest) {
   }
 
   const words = wordData[mode];
-  const randomIndex = Math.floor(Math.random() * words.length);
-  const randomWord = words[randomIndex];
+  const getRandomWords = (num: number) => {
+    const randomWords = new Set<string>();
+    while (randomWords.size < num) {
+      const randomIndex = Math.floor(Math.random() * words.length);
+      randomWords.add(words[randomIndex]);
+    }
+    return Array.from(randomWords);
+  };
 
-  return NextResponse.json({ word: randomWord });
+  const randomWords = getRandomWords(3);
+
+  console.log("random words: ", randomWords);
+
+  return NextResponse.json({ words: randomWords });
 }

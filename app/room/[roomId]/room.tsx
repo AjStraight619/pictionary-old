@@ -20,6 +20,7 @@ export function Room({ roomId, children }: RoomProps) {
         cursor: null,
         isDrawing: false,
         lastUsedColor: null,
+        pencilDraft: null,
       }}
       initialStorage={{
         gameState: new LiveObject({

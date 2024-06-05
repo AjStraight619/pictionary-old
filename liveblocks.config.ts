@@ -82,6 +82,7 @@ export type Presence = {
   cursor: Cursor | null;
   isDrawing: boolean;
   lastUsedColor: string | null;
+  pencilDraft: { x: number; y: number }[] | null;
 };
 
 // Optionally, Storage represents the shared document that persists in the

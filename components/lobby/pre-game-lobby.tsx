@@ -1,9 +1,11 @@
 "use client";
 
 import { useMutation, useStorage } from "@/liveblocks.config";
-import { Dialog, DialogContent } from "../ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 
 import { useState } from "react";
+import Lobby from ".";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 export default function PreGameLobby() {
   const [preGameSettings, setPreGameSetting] = useState({});
@@ -17,7 +19,24 @@ export default function PreGameLobby() {
   if (isGameStarted) return null;
   return (
     <Dialog open={!isGameStarted} onOpenChange={handleStartGame}>
-      <DialogContent>yo</DialogContent>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="text-2xl">Pre Game Lobby</DialogTitle>
+        </DialogHeader>
+        <Lobby />
+        <GameOptions />
+      </DialogContent>
     </Dialog>
+  );
+}
+
+function GameOptions() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Lobby Options</CardTitle>
+      </CardHeader>
+      <CardContent></CardContent>
+    </Card>
   );
 }

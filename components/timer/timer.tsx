@@ -2,16 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
-type Message = {
-  type: string;
-  data: object;
-};
+
+const WSENDPOINT =
+  process.env.NODE_ENV === "development"
+    ? "ws://localhost:8080/ws"
+    : "https://go-ws-d266c24e98a9.herokuapp.com/";
+
 export default function Timer() {
   const socketRef = useRef<WebSocket | null>(null);
   const [timer, setTimer] = useState<number | null>(null);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8080/ws");
+    const socket = new WebSocket("wss://go-ws-d266c24e98a9.herokuapp.com/ws");
     socket.onopen = (event) => {
       console.log("Socket connected ");
     };
@@ -41,11 +43,9 @@ export default function Timer() {
   };
 
   return (
-    <div className="absolute top-2 right-2">
-      <div className="flex flex-row items-center gap-x-2">
-        <Button onClick={sendMessage}>Start Timer</Button>
-        <span>{timer}</span>
-      </div>
+    <div className="flex flex-row items-center gap-x-2">
+      <Button onClick={sendMessage}>Start Timer</Button>
+      <span>{timer}</span>
     </div>
   );
 }

@@ -7,7 +7,6 @@ import {
   Triangle,
 } from "lucide-react";
 import ToolbarButton from "./toolbar-button";
-import { MutableRefObject } from "react";
 import { Element } from "@/lib/types";
 
 type ToolbarProps = {
@@ -20,7 +19,7 @@ export default function Toolbar({
   handleSelectElement,
 }: ToolbarProps) {
   return (
-    <div className="fixed bottom-4 transform -translate-x-[calc(1/2 - 20rem)] left-[calc(1/2 - 20rem)] p-4 bg-white shadow-xl rounded-lg">
+    <div className="fixed bottom-6 transform -translate-x-[calc(1/2 - 20rem)] left-[calc(1/2 - 20rem)] p-4 bg-white shadow-xl rounded-lg">
       <div className="flex items-center gap-x-2">
         <ToolbarButton
           isActive={activeElement === "selector"}

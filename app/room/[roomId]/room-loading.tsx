@@ -9,12 +9,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function RoomLoading() {
   return (
-    <div className="h-screen flex flex-col gap-4 overflow-hidden p-4">
+    <div className="h-screen flex flex-col gap-4 overflow-hidden p-4 container">
       <div
         className="flex flex-row gap-x-4"
         style={{ height: "calc(50% - 8rem)" }}
       >
-        <Card className="w-1/2 h-full overflow-hidden animate-pulse bg-muted/30 rounded-md flex px-6 pb-6 flex-col">
+        <Card className="w-1/2 h-full overflow-hidden animate-pulse bg-muted/30 rounded-md flex px-4 pb-6 flex-col">
           <CardHeader>
             <CardTitle>
               <Skeleton className="w-[150px] h-10" />
@@ -26,7 +26,7 @@ export default function RoomLoading() {
             ))}
           </CardContent>
         </Card>
-        <Card className="w-1/2 h-full overflow-hidden animate-pulse bg-muted/30 rounded-md flex px-6 pb-6 flex-col">
+        <Card className="w-1/2 h-full overflow-hidden animate-pulse bg-muted/30 rounded-md flex px-4 pb-6 flex-col">
           <CardHeader>
             <CardTitle>
               <Skeleton className="w-[150px] h-10" />

@@ -1,5 +1,24 @@
 import { z } from "zod";
 
+export const ProfileSchema = z.object({
+  email: z
+    .string()
+    .min(1, {
+      message: "Email is required",
+    })
+    .max(50, {
+      message: "Email cannot exceed 50 characters",
+    }),
+  username: z
+    .string()
+    .min(2, {
+      message: "Username must be at least 2 characters",
+    })
+    .max(12, {
+      message: "Username cannot exceed 12 characters",
+    }),
+});
+
 export const CreatePlayerSchema = z.object({
   username: z
     .string()

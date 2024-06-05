@@ -88,16 +88,13 @@ export const handleCanvasMouseUp = ({
   shapeRef,
   selectedElementRef,
   setActiveElement,
+  setMyPresence,
 }: CanvasMouseUp) => {
   if (selectedElementRef.current === "pencil") {
-    // isDrawing.current = false;
-    // canvas.isDrawingMode = false;
-    // console.log("Pencil mode deactivated");
+    setMyPresence({ pencilDraft: null });
     return;
   }
 
-  // // Reset state after mouse up
-  // isDrawing.current = false;
   shapeRef.current = "null";
   selectedElementRef.current = null;
 
@@ -131,6 +128,7 @@ export const handleCanvasMouseMove = ({
   canvas,
   isDrawing,
   selectedElementRef,
+  setMyPresence,
 }: CanvasMouseMove) => {
   if (!isDrawing.current) return;
   if (selectedElementRef.current === "pencil") return;

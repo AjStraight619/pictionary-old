@@ -12,11 +12,13 @@ import { motion } from "framer-motion";
 import { useMutation, useStorage } from "@/liveblocks.config";
 import { ScrollArea } from "../ui/scroll-area";
 import { LiveObject } from "@liveblocks/client";
+import Word from "../word/word";
 
 const TESTWORD = "TEST WORD";
 
 export default function Chat() {
   const [input, setInput] = useState("");
+  const currentWord = useStorage((root) => root.roundState.currentWord);
 
   const bottomOfMessagesRef = useRef<HTMLDivElement>(null);
   const messages = useStorage((root) => root.messages);
@@ -39,7 +41,7 @@ export default function Chat() {
       id: nanoid(),
       content: input.trim(),
       username: self.info.username,
-      isCorrect: input.toUpperCase() === TESTWORD,
+      isCorrect: input.toUpperCase() === currentWord.toUpperCase(),
       isClose: checkIsClose(input),
     };
 
@@ -61,9 +63,10 @@ export default function Chat() {
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader>
+      <CardHeader className="flex sm:flex-row flex-col items-center gap-y-2 sm:justify-between">
         <CardTitle>Chat</CardTitle>
         {/* <Button onClick={clearMessage}>Clear</Button> */}
+        <Word />
       </CardHeader>
       <ScrollArea>
         <CardContent className="flex-grow">

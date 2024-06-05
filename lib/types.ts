@@ -1,4 +1,7 @@
 import { fabric } from "fabric";
+import { z } from "zod";
+import { ProfileSchema } from "./schemas";
+import { Presence } from "@/liveblocks.config";
 
 export type Cursor = {
   x: number;
@@ -8,14 +11,15 @@ export type Cursor = {
 export type GameState = {
   isGameStarted: boolean;
   isGameOver: boolean;
-  currentWord: string;
 };
 
 export type RoundState = {
   isRoundStarted: boolean;
   isRoundOver: boolean;
   personDrawing: string;
+  currentWord: string;
 };
+
 export type WordDifficulty = "easy" | "medium" | "hard";
 
 export type ActiveElement = {
@@ -31,6 +35,8 @@ export type Element =
   | "triangle"
   | "trash";
 
+export type TProfileSchema = z.infer<typeof ProfileSchema>;
+
 export type CanvasMouseDown = {
   options: fabric.IEvent;
   canvas: fabric.Canvas;
@@ -39,6 +45,14 @@ export type CanvasMouseDown = {
   shapeRef: React.MutableRefObject<fabric.Object | null>;
   lastUsedColorRef: React.MutableRefObject<string>;
   // strokeWidthRef: React.MutableRefObject<number>;
+  setMyPresence: (
+    patch: Partial<Presence>,
+    options?:
+      | {
+          addToHistory: boolean;
+        }
+      | undefined
+  ) => void;
 };
 
 export type CanvasMouseUp = {
@@ -49,6 +63,14 @@ export type CanvasMouseUp = {
   selectedElementRef: React.MutableRefObject<Element | null>;
   // syncShapeInStorage: (shape: fabric.Object) => void;
   setActiveElement: (element: Element) => void;
+  setMyPresence: (
+    patch: Partial<Presence>,
+    options?:
+      | {
+          addToHistory: boolean;
+        }
+      | undefined
+  ) => void;
 };
 
 export type CanvasMouseMove = {
@@ -56,6 +78,14 @@ export type CanvasMouseMove = {
   canvas: fabric.Canvas;
   isDrawing: React.MutableRefObject<boolean>;
   selectedElementRef: React.MutableRefObject<Element | null>;
+  setMyPresence: (
+    patch: Partial<Presence>,
+    options?:
+      | {
+          addToHistory: boolean;
+        }
+      | undefined
+  ) => void;
 };
 
 export interface CustomFabricObject<T extends fabric.Object>

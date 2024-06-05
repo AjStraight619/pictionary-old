@@ -1,10 +1,51 @@
 "use server";
-
 import { db } from "@/lib/db";
 import { getErrorMessage } from "@/lib/utils";
 import { currentUser } from "@clerk/nextjs/server";
 import { z } from "zod";
-import { CreatePlayerSchema } from "@/lib/schemas";
+import { CreatePlayerSchema, ProfileSchema } from "@/lib/schemas";
+import { TProfileSchema } from "@/lib/types";
+
+export async function updatePlayer(values: TProfileSchema) {
+  const user = await currentUser();
+  if (!user || !user.id) return null;
+  const validatedValues = ProfileSchema.safeParse(values);
+  if (!validatedValues.success) {
+    return {
+      success: false,
+      error: getErrorMessage(validatedValues.error),
+    };
+  }
+
+  const { username, email } = validatedValues.data;
+
+  try {
+    const updatedPlayer = await db.player.upsert({
+      where: {
+        id: user.id,
+      },
+      update: {
+        username: username,
+        email: email,
+      },
+      create: {
+        id: user.id,
+        username: username,
+        email: email,
+        isProfileComplete: true,
+      },
+    });
+    return {
+      success: true,
+      player: updatedPlayer,
+    };
+  } catch (e) {
+    return {
+      success: false,
+      error: getErrorMessage(e),
+    };
+  }
+}
 
 export async function createPlayer(values: z.infer<typeof CreatePlayerSchema>) {
   const validatedValues = CreatePlayerSchema.safeParse(values);
@@ -25,29 +66,6 @@ export async function createPlayer(values: z.infer<typeof CreatePlayerSchema>) {
       error: "No valid user id or missing first name",
     };
   }
-
-  try {
-    const newPlayer = await db.player.create({
-      data: {
-        id: currUser.id,
-        name: currUser.firstName,
-        username: username,
-        isProfileComplete: false,
-      },
-    });
-    if (!newPlayer) {
-      return {
-        success: false,
-        error: "Failed to create player in database",
-      };
-    }
-  } catch (e) {
-    const error = getErrorMessage(e);
-    return {
-      sucess: false,
-      error,
-    };
-  }
 }
 
 export async function isPlayer() {
@@ -63,4 +81,16 @@ export async function isPlayer() {
     },
   });
   return !!player;
+}
+
+export async function getPlayerById() {
+  const user = await currentUser();
+  if (!user || !user.id) return null;
+
+  const player = await db.player.findUnique({
+    where: {
+      id: user.id,
+    },
+  });
+  return player;
 }

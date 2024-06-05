@@ -3,6 +3,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { assignColor } from "@/lib/utils";
 import Timer from "../timer/timer";
+import Word from "../word/word";
 
 type User = {
   username: string;
@@ -10,14 +11,12 @@ type User = {
 
 type ConnectionUser = [number, User];
 
-export default function Lobby() {
+type LobbyProps = {
+  showTimer?: boolean;
+};
+
+export default function Lobby({ showTimer }: LobbyProps) {
   const me = useSelf((me) => me.info);
-
-  // const others = useOthersMapped((other) => other.info);
-
-  // useEffect(() => {
-  //   console.log("component re rendered: ", renderRef.current++);
-  // });
 
   const others: ConnectionUser[] = [
     [1, { username: "Alice" }],
@@ -31,9 +30,9 @@ export default function Lobby() {
 
   return (
     <Card className="h-full relative">
-      {/* <Timer /> */}
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Players</CardTitle>
+        {showTimer && <Timer />}
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-4">

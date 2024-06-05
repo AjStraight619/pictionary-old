@@ -4,7 +4,7 @@ import { CreateRoomSchema } from "@/lib/schemas";
 import { getErrorMessage } from "@/lib/utils";
 import { currentUser } from "@clerk/nextjs/server";
 import { z } from "zod";
-import { isPlayer } from "./player";
+import { redirect } from "next/navigation";
 
 export async function createRoom(values: z.infer<typeof CreateRoomSchema>) {
   const user = await currentUser();
@@ -28,16 +28,12 @@ export async function createRoom(values: z.infer<typeof CreateRoomSchema>) {
     data: { name, isOpen, maxPlayers },
   } = validatedValues;
 
-  const player = isPlayer();
+  let player = await db.player.findUnique({
+    where: { id: user.id },
+  });
 
   if (!player) {
-    await db.player.create({
-      data: {
-        id: user.id,
-        name: user.firstName,
-        isProfileComplete: true,
-      },
-    });
+    redirect("/profile");
   }
 
   try {
@@ -52,7 +48,7 @@ export async function createRoom(values: z.infer<typeof CreateRoomSchema>) {
     try {
       await db.roomPlayer.create({
         data: {
-          playerId: user.id,
+          playerId: player.id,
           roomId: newRoom.id,
           isLeader: true,
         },

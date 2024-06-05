@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { fabric } from "fabric";
-import { useMutation, useOthersMapped } from "@/liveblocks.config";
+import {
+  Presence,
+  useMutation,
+  useMyPresence,
+  useOthersMapped,
+  useStorage,
+  useUpdateMyPresence,
+} from "@/liveblocks.config";
 import Cursor from "./cursor";
 import {
   InitializeCanvas,
@@ -20,6 +27,13 @@ export default function Canvas() {
   const fabricRef = useRef<fabric.Canvas | null>(null);
   const isDrawing = useRef(false);
 
+  const pencilDraftRef = useRef<fabric.Point[]>([]);
+  const tempPathRef = useRef<fabric.Path | null>(null);
+
+  const updateMyPresence = useUpdateMyPresence();
+
+  const [myPresence, setMyPresence] = useMyPresence();
+
   const lastUsedColorRef = useRef("#000000");
 
   const shapeRef = useRef<fabric.Object | null>(null);
@@ -34,7 +48,10 @@ export default function Canvas() {
   const othersMapped = useOthersMapped((other) => ({
     cursor: other.presence.cursor,
     isDrawing: other.presence.isDrawing,
+    pencilDraft: other.presence.pencilDraft,
   }));
+
+  const canvasObjects = useStorage((root) => root.canvasObjects);
 
   const handleSelectElement = useCallback((element: Element) => {
     setActiveElement(element);
@@ -96,6 +113,86 @@ export default function Canvas() {
     []
   );
 
+  // const handleMouseDown = useCallback(
+  //   (options: fabric.IEvent) => {
+  //     handleCanvasMouseDown({
+  //       options,
+  //       canvas: fabricRef.current!,
+  //       isDrawing,
+  //       selectedElementRef,
+  //       shapeRef,
+  //       lastUsedColorRef,
+  //     });
+  //     if (selectedElementRef.current === "pencil") {
+  //       isDrawing.current = true;
+  //       pencilDraftRef.current = [
+  //         new fabric.Point(options.pointer!.x, options.pointer!.y),
+  //       ];
+  //       const path = new fabric.Path(
+  //         `M ${options.pointer!.x} ${options.pointer!.y}`,
+  //         {
+  //           stroke: lastUsedColorRef.current || "black",
+  //           strokeWidth: 2,
+  //           objectCaching: false,
+  //           fill: undefined,
+  //         }
+  //       );
+  //       fabricRef.current?.add(path);
+  //       tempPathRef.current = path;
+  //       updateMyPresence({
+  //         isDrawing: true,
+  //         pencilDraft: pencilDraftRef.current,
+  //       });
+  //     }
+  //   },
+  //   [updateMyPresence]
+  // );
+  // const handleMouseMove = useCallback(
+  //   (options: fabric.IEvent) => {
+  //     handleCanvasMouseMove({
+  //       options,
+  //       canvas: fabricRef.current!,
+  //       isDrawing,
+  //       selectedElementRef,
+  //     });
+
+  //     if (isDrawing.current && selectedElementRef.current === "pencil") {
+  //       pencilDraftRef.current.push(
+  //         new fabric.Point(options.pointer!.x, options.pointer!.y)
+  //       );
+  //       const pathData = pencilDraftRef.current.map((point, index) =>
+  //         index === 0 ? ["M", point.x, point.y] : ["L", point.x, point.y]
+  //       );
+  //       if (tempPathRef.current) {
+  //         tempPathRef.current.set({ path: pathData });
+  //         fabricRef.current?.requestRenderAll();
+  //       }
+  //       updateMyPresence({
+  //         pencilDraft: pencilDraftRef.current,
+  //       });
+  //     }
+  //   },
+  //   [updateMyPresence]
+  // );
+
+  // const handleMouseUp = useCallback(
+  //   (options: fabric.IEvent) => {
+  //     handleCanvasMouseUp({
+  //       canvas: fabricRef.current!,
+  //       isDrawing,
+  //       selectedElementRef,
+  //       shapeRef,
+  //       setActiveElement,
+  //     });
+  //     if (selectedElementRef.current === "pencil") {
+  //       isDrawing.current = false;
+  //       updateMyPresence({ isDrawing: false, pencilDraft: null });
+  //       pencilDraftRef.current = [];
+  //     }
+  //   },
+  //   [updateMyPresence]
+  // );
+
   useEffect(() => {
     const canvas = InitializeCanvas({ canvasRef, fabricRef });
     canvas.on("mouse:down", (options) => {
@@ -106,8 +203,24 @@ export default function Canvas() {
         selectedElementRef,
         shapeRef,
         lastUsedColorRef,
+        setMyPresence,
       });
+      // if (selectedElementRef.current === "pencil") {
+      //   isDrawing.current = true;
+      //   pencilDraftRef.current = [
+      //     { x: options.pointer!.x, y: options.pointer!.y },
+      //   ];
+      //   updateMyPresence({
+      //     isDrawing: true,
+      //     pencilDraft: pencilDraftRef.current,
+      //   });
+      // }
     });
+
+    // canvas.on("mouse:down", handleMouseDown);
+
+    // canvas.on("mouse:up", handleMouseUp);
+    // canvas.on("mouse:move", handleMouseMove);
 
     canvas.on("mouse:up", () => {
       handleCanvasMouseUp({
@@ -116,7 +229,11 @@ export default function Canvas() {
         selectedElementRef,
         shapeRef,
         setActiveElement,
+        setMyPresence,
       });
+      // if (selectedElementRef.current === "pencil") {
+      //   updateMyPresence({ isDrawing: false, pencilDraft: null });
+      // }
     });
 
     canvas.on("mouse:move", (options) => {
@@ -125,7 +242,17 @@ export default function Canvas() {
         canvas,
         isDrawing,
         selectedElementRef,
+        setMyPresence,
       });
+      // if (isDrawing.current && selectedElementRef.current === "pencil") {
+      //   pencilDraftRef.current.push({
+      //     x: options.pointer!.x,
+      //     y: options.pointer!.y,
+      //   });
+      //   updateMyPresence({
+      //     pencilDraft: pencilDraftRef.current,
+      //   });
+      // }
     });
 
     canvas.on("path:created", (options) => {
@@ -161,7 +288,7 @@ export default function Canvas() {
       });
       canvas.dispose();
     };
-  }, [canvasRef]);
+  }, [canvasRef, setMyPresence]);
 
   return (
     <div
