@@ -9,11 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import JoinRoomDialog from "@/components/landing-page/join-room-dialog";
-import { getPlayerById } from "@/actions/player";
-import { db } from "@/lib/db";
-import { currentUser } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
-import Image from "next/image";
 
 export default async function Home() {
   return (

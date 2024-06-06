@@ -35,6 +35,11 @@ export type Element =
   | "triangle"
   | "trash";
 
+export type WSMessage = {
+  type: string;
+  data: any;
+};
+
 export type TProfileSchema = z.infer<typeof ProfileSchema>;
 
 export type CanvasMouseDown = {
