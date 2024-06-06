@@ -46,9 +46,7 @@ export default function Canvas() {
   const isEditingRef = useRef(false);
 
   const othersMapped = useOthersMapped((other) => ({
-    cursor: other.presence.cursor,
     isDrawing: other.presence.isDrawing,
-    pencilDraft: other.presence.pencilDraft,
   }));
 
   const canvasObjects = useStorage((root) => root.canvasObjects);
